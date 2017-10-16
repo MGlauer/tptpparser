@@ -1,15 +1,25 @@
-ebnf_file = {ebnf_line}+ $    ;
+ebnf_file = { ebnf_line }+ $;
 
 ebnf_line = regular_rule | semantic_rule | token_rule | class_rule | comment ;
 
-regular_rule = class '::=' rhs ;
-semantic_rule = class ':==' rhs ;
-token_rule = class '::-' rhs ;
-class_rule = class ':::' rhs ;
-comment = '%' {/./}*;
+regular_rule = lhs '::=' {rhs}+ ;
+semantic_rule = lhs ':==' {rhs}+ ;
+token_rule = lhs '::-' {rhs}+ ;
+class_rule = lhs ':::' {rhs}+ ;
+comment = '%' /.+/ ;
 
-class = '<'{/\w/}+'>' ;
+lhs = class ;
 
-rhs = class | class '|' class | function '(' rhs {', ' rhs}+ ')' ;
+class = /<[^<>]+>/;
 
-function = '%'{/\w/}+ ;
+(*rhs = star | class | option | function | list ;*)
+rhs = rhs_normal | rhs_star | rhs_option ;
+rhs_normal = class | function | list ;
+rhs_option = class {'|' rhs}+ | function {'|' rhs}+ | list {'|' rhs}+ ;
+rhs_star = class '*' | function '*'| list '*';
+(*option = rhs {'|' rhs}+ ;*)
+function = func_name '(' rhs {',' rhs}+ ')' ;
+(*star = rhs '*';*)
+list = '[' rhs ']' ;
+
+func_name = '%'{/\w/}+ ;
