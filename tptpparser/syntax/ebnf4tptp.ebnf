@@ -1,0 +1,15 @@
+ebnf_file = {ebnf_line}+ $    ;
+
+ebnf_line = regular_rule | semantic_rule | token_rule | class_rule | comment ;
+
+regular_rule = class '::=' rhs ;
+semantic_rule = class ':==' rhs ;
+token_rule = class '::-' rhs ;
+class_rule = class ':::' rhs ;
+comment = '%' {/./}*;
+
+class = '<'{/\w/}+'>' ;
+
+rhs = class | class '|' class | function '(' rhs {', ' rhs}+ ')' ;
+
+function = '%'{/\w/}+ ;
