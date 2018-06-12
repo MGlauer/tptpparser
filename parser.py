@@ -83,7 +83,7 @@ fof_function_term = ('$' + fof_plain_term) ^ fof_plain_term
 fof_term << (fof_function_term ^ variable)
 term_list = pp.delimitedList(fof_term, delim=',')
 fof_plain_term << (functor ^ \
-                  (functor + '(' + term_list + ')').setParseAction(lambda x: dict(type:'function')))
+                  (functor + '(' + term_list + ')').setParseAction(lambda x: dict(type='function')))
 fof_unitary_formula = pp.Forward()
 fof_unary_formula = (unary_connective + fof_unitary_formula)
 fof_quantifier = pp.Literal('!') ^ pp.Literal('?')
