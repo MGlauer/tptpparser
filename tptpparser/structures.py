@@ -49,6 +49,11 @@ class BinaryConnective(Enum):
     EQ = 8
     NEQ = 9
     APPLY = 10
+    MAPPING = 11
+    PRODUCT = 12
+    UNION = 13
+    GENTZEN_ARROW = 14
+    ASSIGN = 15
 
     def __repr__(self):
         if self == BinaryConnective.CONJUNCTION:
@@ -73,7 +78,16 @@ class BinaryConnective(Enum):
             return '!='
         if self == BinaryConnective.APPLY:
             return '@'
-
+        if self == BinaryConnective.MAPPING:
+            return '>'
+        if self == BinaryConnective.PRODUCT:
+            return '*'
+        if self == BinaryConnective.UNION:
+            return '+'
+        if self == BinaryConnective.GENTZEN_ARROW:
+            return '-->'
+        if self == BinaryConnective.ASSIGN:
+            return ':='
 
 class DefinedPredicate(Enum):
     DISTINCT = 0
@@ -186,3 +200,14 @@ class Conditional(TPTPElement):
         self.if_clause = if_clause
         self.then_clause = then_clause
         self.else_clause = else_clause
+
+class Let(TPTPElement):
+    def __init__(self, types, definitions, formula):
+        self.types = types
+        self.definitions = definitions
+        self.formula = formula
+
+class Subtype(TPTPElement):
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
