@@ -9,6 +9,11 @@ class Quantifier(Enum):
     UNIVERSAL = 0
     EXISTENTIAL = 1
 
+    def __repr__(self):
+        if self == Quantifier.UNIVERSAL:
+            return u"\u2200"
+        elif self == Quantifier.EXISTENTIAL:
+            return u"\u2203"
 
 class FormulaRole(Enum):
     AXIOM = 0
@@ -27,6 +32,10 @@ class FormulaRole(Enum):
     TYPE = 13
     NEGATED_CONJECTURE = 14
 
+    def __repr__(self):
+        return self.name
+
+
 
 class BinaryConnective(Enum):
     CONJUNCTION = 0
@@ -37,6 +46,25 @@ class BinaryConnective(Enum):
     SIMILARITY = 5
     NEGATED_CONJUNCTION = 6
     NEGATED_DISJUNCTION = 7
+
+    def __repr__(self):
+        if self == BinaryConnective.CONJUNCTION:
+            return '&'
+        if self == BinaryConnective.DISJUNCTION:
+            return '|'
+        if self == BinaryConnective.BIIMPLICATION:
+            return '<=>'
+        if self == BinaryConnective.IMPLICATION:
+            return '=>'
+        if self == BinaryConnective.REVERSE_IMPLICATION:
+            return '<='
+        if self == BinaryConnective.SIMILARITY:
+            return '<~>'
+        if self == BinaryConnective.NEGATED_CONJUNCTION:
+            return '~&'
+        if self == BinaryConnective.NEGATED_DISJUNCTION:
+            return '~|'
+
 
 class DefinedPredicate(Enum):
     DISTINCT = 0
@@ -55,11 +83,19 @@ class DefinedPredicate(Enum):
     DIA_INT = 13
     DIA = 14
 
+    def __repr__(self):
+        return self.name
+
 class QuantifiedFormula(TPTPElement):
     def __init__(self, quantifier, variables, formula):
         self.quantifier = quantifier
         self.variables = variables
         self.formula = formula
+    def __str__(self):
+        return '%s[%s]: %s'%(
+            repr(self.quantifier),
+            ', '.join(self.variables),
+            self.formula)
 
 
 class AnnotatedFormula(TPTPElement):
@@ -68,6 +104,12 @@ class AnnotatedFormula(TPTPElement):
         self.role = role
         self.formula = formula
 
+    def __str__(self):
+        return '%s_%s: %s'%(
+            repr(self.role),
+            self.name,
+            self.formula)
+
 
 class BinaryFormula(TPTPElement):
     def __init__(self, left, operator, right):
@@ -75,13 +117,30 @@ class BinaryFormula(TPTPElement):
         self.right = right
         self.operator = operator
 
+    def __str__(self):
+        return '(%s) %s (%s)'%(
+            self.left,
+            repr(self.operator),
+            self.right)
+
 class FunctorExpression(TPTPElement):
     def __init__(self, functor, arguments):
         self.functor = functor
         self.arguments = arguments
+
+    def __str__(self):
+        return '%s(%s)'%(
+            self.functor,
+            ', '.join(self.arguments))
+
 
 
 class PredicateExpression(TPTPElement):
     def __init__(self, predicate, arguments):
         self.predicate = predicate
         self.arguments = arguments
+
+    def __str__(self):
+        return '%s(%s)'%(
+            self.predicate,
+            ', '.join(self.arguments))
