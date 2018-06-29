@@ -524,17 +524,21 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tcf_formula.
     def visitTcf_formula(self, ctx:tptp_v7_0_0_0Parser.Tcf_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tcf_logic_formula.
     def visitTcf_logic_formula(self, ctx:tptp_v7_0_0_0Parser.Tcf_logic_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tcf_quantified_formula.
     def visitTcf_quantified_formula(self, ctx:tptp_v7_0_0_0Parser.Tcf_quantified_formulaContext):
-        return self.visitChildren(ctx)
+        return structures.QuantifiedFormula(
+            structures.Quantifier.UNIVERSAL,  # quantifier
+            self.visit(ctx.children[2]),  # variable list
+            self.visit(ctx.children[5]),  # formula
+        )
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_formula.
