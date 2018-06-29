@@ -36,7 +36,7 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tpi_formula.
     def visitTpi_formula(self, ctx:tptp_v7_0_0_0Parser.Tpi_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#annotations.
@@ -68,17 +68,17 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_formula.
     def visitThf_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_logic_formula.
     def visitThf_logic_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_logic_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_binary_formula.
     def visitThf_binary_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_binary_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_binary_pair.
@@ -93,57 +93,78 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_or_formula.
     def visitThf_or_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_or_formulaContext):
-        return self.visitChildren(ctx)
+        return structures.BinaryFormula(
+            self.visit(ctx.children[0]),
+            structures.BinaryConnective.DISJUNCTION,
+            self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_and_formula.
     def visitThf_and_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_and_formulaContext):
-        return self.visitChildren(ctx)
+        return structures.BinaryFormula(
+            self.visit(ctx.children[0]),
+            structures.BinaryConnective.CONJUNCTION,
+            self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_apply_formula.
     def visitThf_apply_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_apply_formulaContext):
-        return self.visitChildren(ctx)
+        return structures.BinaryFormula(
+            self.visit(ctx.children[0]),
+            structures.BinaryConnective.APPLY,
+            self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_unitary_formula.
     def visitThf_unitary_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_unitary_formulaContext):
-        return self.visitChildren(ctx)
-
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        if len(ctx.children) == 3:
+            return self.visit(ctx.children[1])
+        raise NotImplementedError
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_quantified_formula.
     def visitThf_quantified_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_quantified_formulaContext):
-        return self.visitChildren(ctx)
+        return structures.QuantifiedFormula(
+            self.visit(ctx.children[0].children[0]),
+            self.visit(ctx.children[0].children[2]),
+            self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_quantification.
     def visitThf_quantification(self, ctx:tptp_v7_0_0_0Parser.Thf_quantificationContext):
-        return self.visitChildren(ctx)
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_variable_list.
     def visitThf_variable_list(self, ctx:tptp_v7_0_0_0Parser.Thf_variable_listContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return [self.visit_first(ctx)]
+        if len(ctx.children) == 3:
+            return self.visit(ctx.children[2]).append(ctx.children[0])
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_variable.
     def visitThf_variable(self, ctx:tptp_v7_0_0_0Parser.Thf_variableContext):
-        return self.visitChildren(ctx)
+        return self.visitVariable(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_typed_variable.
     def visitThf_typed_variable(self, ctx:tptp_v7_0_0_0Parser.Thf_typed_variableContext):
-        return self.visitChildren(ctx)
+        return structures.TypedVariable(
+            self.visit(ctx.children[0]),
+            self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_unary_formula.
     def visitThf_unary_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_unary_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_atom.
     def visitThf_atom(self, ctx:tptp_v7_0_0_0Parser.Thf_atomContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_function.
@@ -153,7 +174,7 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_conn_term.
     def visitThf_conn_term(self, ctx:tptp_v7_0_0_0Parser.Thf_conn_termContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_conditional.
@@ -554,7 +575,7 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_atomic_formula.
     def visitFof_defined_atomic_formula(self, ctx:tptp_v7_0_0_0Parser.Fof_defined_atomic_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_plain_formula.
@@ -564,7 +585,10 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_infix_formula.
     def visitFof_defined_infix_formula(self, ctx:tptp_v7_0_0_0Parser.Fof_defined_infix_formulaContext):
-        return self.visitChildren(ctx)
+        return structures.BinaryFormula(
+                self.visit(ctx.children[0]),
+                structures.BinaryConnective.EQ,
+                self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_system_atomic_formula.
@@ -651,17 +675,33 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#cnf_formula.
     def visitCnf_formula(self, ctx:tptp_v7_0_0_0Parser.Cnf_formulaContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 3:
+            return self.visit(ctx.children[1])
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#cnf_disjunction.
     def visitCnf_disjunction(self, ctx:tptp_v7_0_0_0Parser.Cnf_disjunctionContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 3:
+            return structures.BinaryFormula(
+                self.visit(ctx.children[0]),
+                structures.BinaryConnective.DISJUNCTION,
+                self.visit(ctx.children[2])
+            )
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#cnf_literal.
     def visitCnf_literal(self, ctx:tptp_v7_0_0_0Parser.Cnf_literalContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        else:
+            return structures.UnaryFormula(
+                structures.UnaryConnective.NEGATION,
+                self.visit(ctx.children[1]),
+            )
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_quantifier.
@@ -813,7 +853,7 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#defined_infix_pred.
     def visitDefined_infix_pred(self, ctx:tptp_v7_0_0_0Parser.Defined_infix_predContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#constant.

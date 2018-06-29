@@ -48,6 +48,7 @@ class BinaryConnective(Enum):
     NEGATED_DISJUNCTION = 7
     EQ = 8
     NEQ = 9
+    APPLY = 10
 
     def __repr__(self):
         if self == BinaryConnective.CONJUNCTION:
@@ -70,6 +71,8 @@ class BinaryConnective(Enum):
             return '='
         if self == BinaryConnective.NEQ:
             return '!='
+        if self == BinaryConnective.APPLY:
+            return '@'
 
 
 class DefinedPredicate(Enum):
@@ -157,7 +160,7 @@ class FunctorExpression(TPTPElement):
     def __str__(self):
         return '%s(%s)'%(
             self.functor,
-            ', '.join(self.arguments))
+            ', '.join(map(str, self.arguments)))
 
 
 
@@ -170,3 +173,16 @@ class PredicateExpression(TPTPElement):
         return '%s(%s)'%(
             self.predicate,
             ', '.join(self.arguments))
+
+
+class TypedVariable(TPTPElement):
+    def __init__(self, name, vtype):
+        self.name = name
+        self.vtype = vtype
+
+
+class Conditional(TPTPElement):
+    def __init__(self, if_clause, then_clause, else_clause):
+        self.if_clause = if_clause
+        self.then_clause = then_clause
+        self.else_clause = else_clause

@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from antlr4 import *
 from parser.tptp_v7_0_0_0Lexer import tptp_v7_0_0_0Lexer
 from parser.tptp_v7_0_0_0Parser import tptp_v7_0_0_0Parser
@@ -16,9 +16,14 @@ def main(path):
     print('done')
     visitor = FOFFlatteningVisitor()
     result = visitor.visit(tree)
-    print(result)
+    for line in result:
+        print(line)
 
 
 if __name__ == '__main__':
-    main('data/small.ax')
-    #main('data/TPTP-v7.1.0/Axioms/AGT001+0.ax')
+    for root, dirs, files in os.walk('data/TPTP-v7.1.0/Axioms'):
+        for file in files:
+            if not file =='README':
+                f = os.path.join(root,file)
+                print(f)
+                main(f)
