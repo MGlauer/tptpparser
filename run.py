@@ -15,7 +15,8 @@ def main(path):
     tree = parser.tptp_file()
     print('done')
     visitor = FOFFlatteningVisitor()
-    print(visitor.visit(tree))
+    result = visitor.visit(tree)
+    print(result)
 
 
 if __name__ == '__main__':
