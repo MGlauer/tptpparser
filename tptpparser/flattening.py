@@ -654,7 +654,7 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_plain_formula.
     def visitFof_defined_plain_formula(self, ctx:tptp_v7_0_0_0Parser.Fof_defined_plain_formulaContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_infix_formula.
@@ -684,22 +684,36 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_term.
     def visitFof_defined_term(self, ctx:tptp_v7_0_0_0Parser.Fof_defined_termContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_atomic_term.
     def visitFof_defined_atomic_term(self, ctx:tptp_v7_0_0_0Parser.Fof_defined_atomic_termContext):
-        return self.visitChildren(ctx)
+        return self.visit_first(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_defined_plain_term.
     def visitFof_defined_plain_term(self, ctx:tptp_v7_0_0_0Parser.Fof_defined_plain_termContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 4:
+            return structures.FunctorExpression(
+                self.visit(ctx.children[0]),
+                self.visit(ctx.children[2])
+            )
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_system_term.
     def visitFof_system_term(self, ctx:tptp_v7_0_0_0Parser.Fof_system_termContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 4:
+            return structures.FunctorExpression(
+                self.visit(ctx.children[0]),
+                self.visit(ctx.children[2])
+            )
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#fof_arguments.
