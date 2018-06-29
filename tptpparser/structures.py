@@ -46,6 +46,8 @@ class BinaryConnective(Enum):
     SIMILARITY = 5
     NEGATED_CONJUNCTION = 6
     NEGATED_DISJUNCTION = 7
+    EQ = 8
+    NEQ = 9
 
     def __repr__(self):
         if self == BinaryConnective.CONJUNCTION:
@@ -64,6 +66,10 @@ class BinaryConnective(Enum):
             return '~&'
         if self == BinaryConnective.NEGATED_DISJUNCTION:
             return '~|'
+        if self == BinaryConnective.EQ:
+            return '='
+        if self == BinaryConnective.NEQ:
+            return '!='
 
 
 class DefinedPredicate(Enum):
@@ -86,11 +92,31 @@ class DefinedPredicate(Enum):
     def __repr__(self):
         return self.name
 
+
+class UnaryConnective(Enum):
+    NEGATION = 0
+    def __repr__(self):
+        if self == UnaryConnective.NEGATION:
+            return '~'
+
+
+class UnaryFormula(TPTPElement):
+    def __init__(self, connective, formula):
+        self.connective = connective
+        self.formula = formula
+
+    def __str__(self):
+        return '%s(%s)'%(
+            repr(self.connective),
+            self.formula)
+
+
 class QuantifiedFormula(TPTPElement):
     def __init__(self, quantifier, variables, formula):
         self.quantifier = quantifier
         self.variables = variables
         self.formula = formula
+
     def __str__(self):
         return '%s[%s]: %s'%(
             repr(self.quantifier),
