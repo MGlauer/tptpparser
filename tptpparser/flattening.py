@@ -439,17 +439,17 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_sequent.
     def visitTff_sequent(self, ctx:tptp_v7_0_0_0Parser.Tff_sequentContext):
-        return self.visitChildren(ctx)
+        return self.visitThf_sequent(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_formula_tuple.
     def visitTff_formula_tuple(self, ctx:tptp_v7_0_0_0Parser.Tff_formula_tupleContext):
-        return self.visitChildren(ctx)
+        return self.visitFof_formula_tuple(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_formula_tuple_list.
     def visitTff_formula_tuple_list(self, ctx:tptp_v7_0_0_0Parser.Tff_formula_tuple_listContext):
-        return self.visitChildren(ctx)
+        return self.visitFof_formula_tuple_list(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_typed_atom.
@@ -459,47 +459,67 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_subtype.
     def visitTff_subtype(self, ctx:tptp_v7_0_0_0Parser.Tff_subtypeContext):
-        return self.visitChildren(ctx)
+        return self.visitThf_subtype(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_top_level_type.
     def visitTff_top_level_type(self, ctx:tptp_v7_0_0_0Parser.Tff_top_level_typeContext):
-        return self.visitChildren(ctx)
+        return self.visitThf_top_level_type(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tf1_quantified_type.
     def visitTf1_quantified_type(self, ctx:tptp_v7_0_0_0Parser.Tf1_quantified_typeContext):
-        return self.visitChildren(ctx)
+        return structures.QuantifiedType(
+            self.visit(ctx.children[0]),
+            self.visit(ctx.children[5])
+        )
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_monotype.
     def visitTff_monotype(self, ctx:tptp_v7_0_0_0Parser.Tff_monotypeContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 3:
+            return self.visit(ctx.children[1])
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_unitary_type.
     def visitTff_unitary_type(self, ctx:tptp_v7_0_0_0Parser.Tff_unitary_typeContext):
-        return self.visitChildren(ctx)
+        return self.visitThf_unitary_type(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_atomic_type.
     def visitTff_atomic_type(self, ctx:tptp_v7_0_0_0Parser.Tff_atomic_typeContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 3:
+            return structures.FunctorExpression(
+                self.visit(ctx.children[0]),
+                self.visit(ctx.children[2]))
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_type_arguments.
     def visitTff_type_arguments(self, ctx:tptp_v7_0_0_0Parser.Tff_type_argumentsContext):
-        return self.visitChildren(ctx)
+        if len(ctx.children) == 1:
+            return [self.visit_first(ctx)]
+        elif len(ctx.children) == 3:
+            return self.visit(ctx.children[2]).append(self.visit(ctx.children[0]))
+        raise NotImplementedError
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_mapping_type.
     def visitTff_mapping_type(self, ctx:tptp_v7_0_0_0Parser.Tff_mapping_typeContext):
-        return self.visitChildren(ctx)
+        return structures.BinaryFormula(
+            self.visit(ctx.children[0]),
+            structures.BinaryConnective.ARROW,
+            self.visit(ctx.children[2]))
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_xprod_type.
     def visitTff_xprod_type(self, ctx:tptp_v7_0_0_0Parser.Tff_xprod_typeContext):
-        return self.visitChildren(ctx)
+        return self.visitThf_xprod_type(ctx)
 
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tcf_formula.

@@ -54,6 +54,7 @@ class BinaryConnective(Enum):
     UNION = 13
     GENTZEN_ARROW = 14
     ASSIGN = 15
+    ARROW = 16
 
     def __repr__(self):
         if self == BinaryConnective.CONJUNCTION:
@@ -88,6 +89,8 @@ class BinaryConnective(Enum):
             return '-->'
         if self == BinaryConnective.ASSIGN:
             return ':='
+        if self == BinaryConnective.ARROW:
+            return '>'
 
 class DefinedPredicate(Enum):
     DISTINCT = 0
@@ -211,3 +214,8 @@ class Subtype(TPTPElement):
     def __init__(self, left, right):
         self.left = left
         self.right = right
+
+class QuantifiedType(TPTPElement):
+    def __init__(self, variables, vtype):
+        self.variables = variables
+        self.vtype = vtype
