@@ -16,7 +16,7 @@ class Formula(Base):
     __tablename__= 'formula'
     id = sqla.Column(sqla.Integer, primary_key=True)
     language = sqla.Column(Enum(Languages))
-    string = sqla.Column(sqla.String)
+    blob = sqla.Column(sqla.Binary)
 
 
 class SolutionItem(Base):
