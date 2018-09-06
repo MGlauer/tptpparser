@@ -37,9 +37,14 @@ class Problem(Base):
     solutions = relation(Solution)
 
 
-def create_structures():
+def create_tables():
     metadata = Base.metadata
     metadata.bind = get_engine()
     metadata.create_all()
 
+
+def drop_tables():
+    metadata = Base.metadata
+    metadata.bind = get_engine()
+    metadata.drop_all()
 
