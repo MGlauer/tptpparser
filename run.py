@@ -1,8 +1,9 @@
-import sys, os
+import os
 from antlr4 import *
 from parser.tptp_v7_0_0_0Lexer import tptp_v7_0_0_0Lexer
 from parser.tptp_v7_0_0_0Parser import tptp_v7_0_0_0Parser
 from tptpparser.flattening import FOFFlatteningVisitor
+from data.io.structures import create_structures
 
 def main(path):
     input = FileStream(path)
@@ -29,5 +30,7 @@ def traverse_folder(path):
                     print(input)
 
 if __name__ == '__main__':
+    create_structures()
     # traverse_folder('data/TPTP/Axioms')
-    main('data/TPTP/Axioms/CSR002+5.ax')
+    #for item in main('data/TPTP/Axioms/CSR002+5.ax'):
+    #    print(item)
