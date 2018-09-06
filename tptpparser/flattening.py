@@ -1,6 +1,5 @@
 # Generated from tptp_v7_0_0_0.g4 by ANTLR 4.5.1
-from antlr4 import *
-import tptpparser.structures as structures
+import logic.fol as structures
 from parser.tptp_v7_0_0_0Parser import tptp_v7_0_0_0Parser
 from parser.tptp_v7_0_0_0Visitor import tptp_v7_0_0_0Visitor
 
