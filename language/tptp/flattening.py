@@ -1,7 +1,7 @@
 # Generated from tptp_v7_0_0_0.g4 by ANTLR 4.5.1
 import logic.fol as structures
-from parser.tptp_v7_0_0_0Parser import tptp_v7_0_0_0Parser
-from parser.tptp_v7_0_0_0Visitor import tptp_v7_0_0_0Visitor
+from language.tptp.parser import tptp_v7_0_0_0Parser
+from language.tptp.parser.tptp_v7_0_0_0Visitor import tptp_v7_0_0_0Visitor
 
 # This class defines a complete generic visitor for a parse tree produced by tptp_v7_0_0_0Parser.
 
