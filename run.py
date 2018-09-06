@@ -12,18 +12,22 @@ def main(path):
     parser = tptp_v7_0_0_0Parser(stream)
     print('done')
     print('build parse tree...')
-    tree = parser.tptp_file()
-    print('done')
     visitor = FOFFlatteningVisitor()
-    result = visitor.visit(tree)
-    for line in result:
-        print(line)
+    #result = visitor.visit(parser.tptp_file())
+    tree = parser.tptp_input()
+    while tree:
+        yield visitor.visit(tree)
+        tree = parser.tptp_input()
 
-
-if __name__ == '__main__':
-    for root, dirs, files in os.walk('data/TPTP-v7.1.0/Axioms'):
+def traverse_folder(path):
+    for root, dirs, files in os.walk(path):
         for file in files:
             if not file =='README':
                 f = os.path.join(root,file)
                 print(f)
-                main(f)
+                for input in main(f):
+                    print(input)
+
+if __name__ == '__main__':
+    # traverse_folder('data/TPTP/Axioms')
+    main('data/TPTP/Axioms/CSR002+5.ax')
