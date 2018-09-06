@@ -6,16 +6,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from .connection import get_engine
 
 
-class Languages(enum.Enum):
-    TPTP = 1
-
 Base = declarative_base()
 
 
 class Formula(Base):
     __tablename__= 'formula'
     id = sqla.Column(sqla.Integer, primary_key=True)
-    language = sqla.Column(Enum(Languages))
     blob = sqla.Column(sqla.Binary)
 
 
