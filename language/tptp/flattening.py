@@ -115,8 +115,8 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
     def visitThf_quantified_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_quantified_formulaContext):
         return structures.QuantifiedFormula(
             self.visit(ctx.children[0].children[0]),
-            self.visit(ctx.children[0].children[2]),
-            self.visit(ctx.children[2]))
+            self.visit(ctx.children[0].children[1]),
+            self.visit(ctx.children[1]))
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_quantification.
     def visitThf_quantification(self, ctx:tptp_v7_0_0_0Parser.Thf_quantificationContext):
@@ -142,7 +142,8 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_unary_formula.
     def visitThf_unary_formula(self, ctx:tptp_v7_0_0_0Parser.Thf_unary_formulaContext):
-        return self.visit_first(ctx)
+        return structures.UnaryFormula(self.visit(ctx.children[0]),
+                                       self.visit(ctx.children[2]))
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_atom.
     def visitThf_atom(self, ctx:tptp_v7_0_0_0Parser.Thf_atomContext):
@@ -698,10 +699,8 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#thf_unary_connective.
     def visitThf_unary_connective(self, ctx:tptp_v7_0_0_0Parser.Thf_unary_connectiveContext):
-        connective = self.visit(ctx)
-        if connective == '~':
-            return structures.UnaryConnective.NEGATION
-        raise NotImplementedError
+        return self.visit_first(ctx)
+
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#th1_unary_connective.
     def visitTh1_unary_connective(self, ctx:tptp_v7_0_0_0Parser.Th1_unary_connectiveContext):
