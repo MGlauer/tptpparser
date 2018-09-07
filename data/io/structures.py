@@ -8,24 +8,29 @@ from .connection import get_engine
 
 Base = declarative_base()
 
+class Source(Base):
+    __tablename__='source'
+    id = sqla.Column(sqla.Integer, primary_key=True)
+    path = sqla.Column(sqla.String, unique=True)
+    formulas = relation('Formula')
 
 class Formula(Base):
     __tablename__= 'formula'
     id = sqla.Column(sqla.Integer, primary_key=True)
+    source = sqla.Column(sqla.Integer, sqla.ForeignKey(Source.id))
     blob = sqla.Column(sqla.Binary)
 
+association_premises = sqla.Table('association', Base.metadata,
+    sqla.Column('left_id', sqla.Integer, sqla.ForeignKey('problem.id')),
+    sqla.Column('right_id', sqla.Integer, sqla.ForeignKey('formula.id'))
+)
 
 class SolutionItem(Base):
     id = sqla.Column(sqla.Integer, primary_key=True)
     __tablename__ = 'solution_item'
+    solution = sqla.Column(sqla.Integer, sqla.ForeignKey('solution.id'))
     premise = sqla.Column(sqla.Integer, sqla.ForeignKey(Formula.id))
     used = sqla.Column(sqla.Boolean)
-
-
-class Solution(Base):
-    __tablename__ = 'solution'
-    id = sqla.Column(sqla.Integer, primary_key=True)
-    premises = relation(SolutionItem)
 
 
 class Problem(Base):
@@ -33,18 +38,26 @@ class Problem(Base):
     id = sqla.Column(sqla.Integer, primary_key=True)
     name = sqla.Column(sqla.String, nullable=False, default='')
     conjecture = sqla.Column(sqla.Integer, sqla.ForeignKey(Formula.id))
-    premises = relation(Formula)
-    solutions = relation(Solution)
+    premises = relation(Formula, secondary=association_premises)
+    solutions = relation('Solution')
+
+
+class Solution(Base):
+    __tablename__ = 'solution'
+    id = sqla.Column(sqla.Integer, primary_key=True)
+    problem = sqla.Column(sqla.Integer, sqla.ForeignKey('problem.id'))
+    premises = relation(SolutionItem)
 
 
 def create_tables():
+    print('Build datastructures')
     metadata = Base.metadata
     metadata.bind = get_engine()
     metadata.create_all()
 
 
 def drop_tables():
+    print('Destroy datastructures')
     metadata = Base.metadata
     metadata.bind = get_engine()
     metadata.drop_all()
-

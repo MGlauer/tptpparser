@@ -219,3 +219,10 @@ class QuantifiedType(TPTPElement):
     def __init__(self, variables, vtype):
         self.variables = variables
         self.vtype = vtype
+
+class Import(TPTPElement):
+    def __init__(self, *args):
+        pass
+
+class EOFException(Exception):
+    pass

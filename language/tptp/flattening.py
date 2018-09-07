@@ -11,6 +11,8 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
         return node.symbol.text
 
     def visit_first(self, ctx):
+        if ctx.children is None:
+            raise structures.EOFException
         assert len(ctx.children) == 1
         return self.visit(ctx.children[0])
 
