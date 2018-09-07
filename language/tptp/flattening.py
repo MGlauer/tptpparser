@@ -318,7 +318,13 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_unary_formula.
     def visitTff_unary_formula(self, ctx:tptp_v7_0_0_0Parser.Tff_unary_formulaContext):
-        return self.visit_first(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 2:
+            return structures.UnaryFormula(
+                self.visit(ctx.children[0]),
+                self.visit(ctx.children[1]),
+            )
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_atomic_formula.
     def visitTff_atomic_formula(self, ctx:tptp_v7_0_0_0Parser.Tff_atomic_formulaContext):
@@ -416,7 +422,10 @@ class FOFFlatteningVisitor(tptp_v7_0_0_0Visitor):
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_unitary_type.
     def visitTff_unitary_type(self, ctx:tptp_v7_0_0_0Parser.Tff_unitary_typeContext):
-        return self.visitThf_unitary_type(ctx)
+        if len(ctx.children) == 1:
+            return self.visit_first(ctx)
+        elif len(ctx.children) == 3:
+            return self.visit(ctx.children[1])
 
     # Visit a parse tree produced by tptp_v7_0_0_0Parser#tff_atomic_type.
     def visitTff_atomic_type(self, ctx:tptp_v7_0_0_0Parser.Tff_atomic_typeContext):
